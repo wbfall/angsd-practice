@@ -1,6 +1,6 @@
 ---
-title: 'Week 1: Practice Exercise'
-author: "Mervin Fansler"
+title: "Untitled"
+author: "Author"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:
@@ -38,4 +38,3 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 ```{r session_info, echo=FALSE}
 sessionInfo()
 ```
-
