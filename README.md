@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/328578836.svg)](https://zenodo.org/doi/10.5281/zenodo.10525995)
+
 This repository provides a practice .Rmd file to knit (render).
 
 # Instructions
