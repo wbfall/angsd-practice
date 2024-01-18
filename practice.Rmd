@@ -93,6 +93,7 @@ iris %>%
 We use a jitter of 0.05 cm, which should be reasonable given the resolution of
 the data appeared to be 0.1 cm. It should also be noted that the reproducibility
 of this particular figure depends on the value given to `set.seed` in the 
+[**Parameters** section](#parameters).
 
 ## Comparing Sepal Width across Species
 
