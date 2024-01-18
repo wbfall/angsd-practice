@@ -3,38 +3,126 @@ title: "Untitled"
 author: "Author"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
-  html_document:
+  html_document: 
+    code_folding: show
+    df_print: paged
+    theme: cosmo
     toc: true
     toc_depth: 2
+    toc_float: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# Purpose
+This document is an example RMarkdown to be edited and rerendered as an exercise. 
+It gives examples of some good practices, like using a dynamically rendered date, 
+advanced HTML options, informative headers, setting a random seed, and capturing
+runtime details.
+
+<!--
+In a real analysis one would explain why this document exists and answer
+questions like:
+What is trying to be figured out?
+How will that be done (or attempted to be done)?
+What are the expected outcomes prior to the analysis?
+-->
+
+# Initialization
+## Libraries
+<!--
+It is helpful to declare all libraries needed by a document near the top.
+One may also want the chunk set to `warning=FALSE`, to avoid extra noise.
+-->
+
+```{r libs, message=FALSE}
+library(magrittr)
+library(tidyverse)
 ```
 
-## R Markdown
+## Parameters
+<!--
+Values that control what and how data are processed throughout a document are 
+useful to keep in one place.
+This is a good place to set global theme options.
+It is good practice to always declare a random numnber seed, even if unneeded.
+-->
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r params}
+set.seed(20240118)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+theme_set(theme_bw())
 ```
 
-## Including Plots
+# Data
+This document will look at the `iris` dataset.
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r view_data}
+iris
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The observations are in centimeters and appear rounded to the nearest millimeter.
+
+# Analysis
+Here are a couple exploratory data visualizations to see the variation in 
+characteristics within and across species.
+
+## Comparing Sepal Length and Width by Species
+
+### Point plot
+```{r plt_length_v_width, fig.width=5, fig.height=4}
+iris %>%
+  mutate(Species=str_to_title(Species)) %>%
+  ggplot(aes(x=Sepal.Width, y=Sepal.Length, color=Species)) +
+  geom_point()  +
+  labs(x="Sepal Width [cm]", y="Sepal Length [cm]")
+```
+
+The dots appear regularly spaced and could be prone to overplotting. That is, 
+if two observations have the same measurement after rounding, then only the 
+last one plotted would appear in the table. One way to deal with this is to add 
+*jitter* (random uniform noise) to the data.
+
+### Jitter plot
+```{r plt_length_v_width_jitter, fig.width=5, fig.height=4}
+iris %>%
+  mutate(Species=str_to_title(Species)) %>%
+  ggplot(aes(x=Sepal.Width, y=Sepal.Length, color=Species)) +
+  geom_jitter(width=0.05, height=0.05)  +
+  labs(x="Sepal Width [cm]", y="Sepal Length [cm]")
+```
+
+We use a jitter of 0.05 cm, which should be reasonable given the resolution of
+the data appeared to be 0.1 cm. It should also be noted that the reproducibility
+of this particular figure depends on the value given to `set.seed` in the 
+
+## Comparing Sepal Width across Species
+
+```{r plt_box_width, fig.width=3, fig.height=3}
+iris %>%
+  mutate(Species=reorder(str_to_title(Species), Sepal.Width, FUN=median)) %>%
+  ggplot(aes(x=Species, y=Sepal.Width)) +
+  geom_boxplot() +
+  labs(x=NULL, y="Sepal Width [cm]")
+```
+
+We observe the median sepal width is widest in the *I. setosa* species.
+
+# Conclusion
+This document demonstrated a few typical practices in an R Markdown document.
+<!--
+In a real analysis, one would clearly state each conclusion and answer 
+questions like:
+What was found?
+Was there anything unexpected?
+Are there unanswered questions?
+What should be worked on next?
+-->
 
 ---
 
-# Session Info
+# Runtime Details
+## Session Info
+<details>
 ```{r session_info, echo=FALSE}
 sessionInfo()
 ```
+</details>
